@@ -2,14 +2,19 @@
 
 import time
 
-def get_log_dictionary(log_file_name):
-    log_file = open(log_file_name, "r")
-    log_file_text = log_file.read()
-    log_file.close()
-    return eval(log_file_text)
+articles_file = open("articles.txt", "r")
 
-log_dict = get_log_dictionary("log.txt")
+foundArticlesDict = {}
+articleCount = 0
 
-cnn_rss_url = 'http://rss.cnn.com/rss/cnn_latest.rss' #url for RSS feed
+for line in iter(articles_file):
+    articleCount += 1
+    url = line.split("\t")[1]
+    date = line.split("\t")[0]
+    #if url in foundArticlesDict:
+    if foundArticlesDict.get(url) == date:
+        print ("duplicate url with same date:", url)
+    else:
+        foundArticlesDict[url] = date
 
-print ("Latest Time Stamp Mined from CNN:", time.strftime('%m/%d/%Y %H:%M:%S',time.gmtime(log_dict[cnn_rss_url])))
+print("Total Articles:", articleCount, "Unique Articles:", len(foundArticlesDict))
