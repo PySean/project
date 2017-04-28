@@ -2,7 +2,12 @@
 
 import re
 import sys
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 import socket
+
+port = PorterStemmer()
+lemming = WordNetLemmatizer()
 
 for line in sys.stdin:
     # print('{}\t{}'.format(socket.gethostname(), 0))
@@ -14,4 +19,8 @@ for line in sys.stdin:
     # Strip all punctuation and garbage, make lowercase.
     rest = re.sub("[^A-Za-z ]", "", rest).lower()
     for word in rest.split():
-        print("{}\t{}".format(word, 1))
+        newWord = lemming.lemmatize(word)
+        # Stem the word like a brute if lemmatize failed.
+        if newWord == word:
+            newWord = port.stem(word)
+        print("{}\t{}".format(newWord, 1))

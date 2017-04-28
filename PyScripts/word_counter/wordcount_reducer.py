@@ -20,4 +20,4 @@ for line in sys.stdin:
         word_count += int(the_line[1])
 else:
     print("{}\t{}".format(current_word, word_count))
-    print("{}\t{}".format("Total number of words:", total_words))
+    #print("{}\t{}".format("Total number of words:", total_words))
