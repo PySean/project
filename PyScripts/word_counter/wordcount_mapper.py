@@ -20,7 +20,7 @@ for line in sys.stdin:
     rest = re.sub("[^A-Za-z ]", "", rest).lower()
     for word in rest.split():
         newWord = lemming.lemmatize(word)
-        # Stem the word like a brute if lemmatize failed.
-        if newWord == word:
-            newWord = port.stem(word)
+        # Stem the word like a brute to ensure we
+        # have a root word.
+        newWord = port.stem(newWord)
         print("{}\t{}".format(newWord, 1))
