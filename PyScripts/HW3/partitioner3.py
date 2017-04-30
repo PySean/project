@@ -10,7 +10,7 @@ from datetime import datetime
 import time
 import subprocess
 import re
-nltk.download('wordnet')
+nltk.download('cc/wordnet')
 from nltk.stem.wordnet import WordNetLemmatizer
 #from stemming.porter2 import stem
 tempDist = 1.0
@@ -129,11 +129,11 @@ def updateCounts(histogram, totalHistory):
 
 def closestPoint(p, centers):
     bestIndex = 0
-    closest = float(0)
-    #closest = float("+inf")
+    #closest = float(0)
+    closest = float("+inf")
     for i in range(len(centers)):
         tempDist = compareArticles(p, centers[i])
-        if tempDist > closest:
+        if tempDist < closest:
             closest = tempDist 
             bestIndex = i
     return bestIndex
@@ -144,8 +144,8 @@ def divDict(histogram, number):
     return histogram
 
 def moveToComputeFromStorage(rDDs):
-    clustered_HDFS_path = '/user/hduser/clusteredArticles/'
-    subprocess.call(["/usr/local/hadoop-1.2.1/bin/hadoop", "fs", "-rmr", clustered_HDFS_path])
+    clustered_HDFS_path = '/user/cc/clusteredArticles/'
+    subprocess.call(["/home/cc/installed_stuff/hadoop-2.7.3", "fs", "-rmr", clustered_HDFS_path])
     clusterCount = 1
     for rDD in rDDs:
         rDD = rDD.repartition(1)
@@ -154,8 +154,8 @@ def moveToComputeFromStorage(rDDs):
     return
 
 def moveToComputeFromStorage2(rDDs):
-   clustered_HDFS_path = '/user/hduser/clusteredArticlesTest/'
-   hadoop_location = "/usr/local/hadoop-1.2.1/bin/hadoop"
+   clustered_HDFS_path = '/user/cc/clusteredArticlesTest/'
+   hadoop_location = "/home/cc/installed_stuff/hadoop-2.7.3"
    subprocess.call([hadoop_location, "fs", "-rmr", clustered_HDFS_path])
    clusterCount = 1
    for rDD in rDDs:
@@ -178,7 +178,8 @@ def moveToComputeFromStorage3(KRDDs):
 
 #crime type: ndx 1, address: index 5
 sc = SparkContext(appName="kmeans")
-lines = sc.textFile("hdfs://master:54310/user/hduser/articles").cache()
+# hdfs://yarnmaster:54310 (previous prefix to pathname below.)
+lines = sc.textFile("/user/cc/articleInput").cache()
 
 #data = sc.parallelize(lines.takeSample(False, 1000, int(time.time()))).map(parseArticle).cache() 
 data = lines.map(parseArticle).cache()
@@ -199,7 +200,7 @@ totalHistory=data.reduce(lambda x, y : merge_two_dicts(x,y))
 
 SAMPLE_SIZE = 100
 tempDist = 1
-K = 3
+K = 6
 numPoints = data.count()
 convergeDist = .0001
 kPointss = data.takeSample(False, K, random.randint(1,100))
@@ -207,9 +208,7 @@ kPoints = []
 for kPoint in kPointss:
     kPoints.append(kPoint)
 x=0
-while x <10:
-    x+=1
-    #while tempDist > convergeDist:
+while tempDist > convergeDist:
     closest = data.map(lambda x : (closestPoint(x, kPoints),(x,1))).cache()
     testClosest = closest.groupByKey().collect()
 #    print("================NEW ITERATION===============")

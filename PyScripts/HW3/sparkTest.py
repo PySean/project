@@ -4,7 +4,7 @@ from pyspark import SparkContext, SparkConf
 
 sc = SparkContext(appName="Spark Test")
 
-lines = sc.textFile("hdfs://master:54310/hw2-input")
+lines = sc.textFile("hdfs://yarnmaster/user/cc/kmeansinput")
 print("Total Lines: ", lines.count())
 #lines.take(5)
 #lines.getNumPartitions()

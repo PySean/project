@@ -32,7 +32,7 @@ def printStuff(line):
 #crime type: ndx 1, address: index 5
 sc = SparkContext(appName="kmeans")
 
-lines = sc.textFile("hdfs://master:54310/hw2-input")
+lines = sc.textFile("hdfs://yarnmaster/user/cc/kmeansinput")
 data = lines.filter(lambda x: ("BURGLARY" in x or "THEFT" in x)).map(parseVector).filter(lambda x:("nothin" not in x[0]))
 data2 = data.reduceByKey(lambda x, y : x + y).cache()
 #for Testing below

@@ -8,8 +8,8 @@ fi
 
 if [ $# -eq 2  ] && [ $2 == "-q" ]
   then
-    /usr/local/spark-1.6.1-bin-hadoop1/bin/spark-submit --master yarn --deploy-mode cluster $1 2> /dev/null
+/home/cc/installed_stuff/spark-2.1.0-bin-hadoop2.7/bin/spark-submit --master yarn --deploy-mode cluster $1 2> /dev/null
     exit 0
   else
-    /usr/local/spark-1.6.1-bin-hadoop1/bin/spark-submit --master yarn --deploy-mode cluster  $1
+ /home/cc/installed_stuff/spark-2.1.0-bin-hadoop2.7/bin/spark-submit --master yarn --deploy-mode cluster  $1
 fi
